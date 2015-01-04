@@ -839,14 +839,14 @@ function LogoInterpreter(turtle, stream, savehook)
       }
     }
 
-    var def = "to " + name;
+    var def = "за " + name;
     if (proc.inputs.length) {
       def += " ";
       def += proc.inputs.map(function(a) { return ":" + a; }).join(" ");
     }
     def += "\n";
     def += "  " + proc.block.map(defn).join(" ").replace(new RegExp(UNARY_MINUS + ' ', 'g'), '-');
-    def += "\n" + "end";
+    def += "\n" + "край";
 
     return def;
   };
@@ -941,7 +941,7 @@ function LogoInterpreter(turtle, stream, savehook)
   //
   // Procedures and Flow Control
   //
-  def("to", function(list) {
+  def(["to","за"], function(list) {
     var name = sexpr(list.shift());
     if (!name.match(regexIdentifier)) {
       throw new Error(__("Expected identifier"));
@@ -958,7 +958,7 @@ function LogoInterpreter(turtle, stream, savehook)
     var state_inputs = true, sawEnd = false;
     while (list.length) {
       var atom = list.shift();
-      if (Type(atom) === 'word' && atom.toUpperCase() === 'END') {
+      if (Type(atom) === 'word' && atom.toUpperCase() === 'КРАЙ') {
         sawEnd = true;
         break;
       } else if (state_inputs && Type(atom) === 'word' && atom.charAt(0) === ':') {
@@ -1541,10 +1541,10 @@ function LogoInterpreter(turtle, stream, savehook)
   //----------------------------------------------------------------------
   // 6.1 Turtle Motion
 
-  def(["forward", "fd"], function(a) { turtle.move(aexpr(a)); });
-  def(["back", "bk"], function(a) { turtle.move(-aexpr(a)); });
-  def(["left", "lt"], function(a) { turtle.turn(-aexpr(a)); });
-  def(["right", "rt"], function(a) { turtle.turn(aexpr(a)); });
+  def(["forward", "fd", "нп", "напред"], function(a) { turtle.move(aexpr(a)); });
+  def(["back", "bk", "нз", "назад"], function(a) { turtle.move(-aexpr(a)); });
+  def(["left", "lt", "нл", "наляво"], function(a) { turtle.turn(-aexpr(a)); });
+  def(["right", "rt", "нд", "надясно"], function(a) { turtle.turn(aexpr(a)); });
 
   // Left arrow:
   def(["\u2190"], function() { turtle.turn(-15); });
@@ -1593,7 +1593,7 @@ function LogoInterpreter(turtle, stream, savehook)
   def(["showturtle", "st"], function() { turtle.showturtle(); });
   def(["hideturtle", "ht"], function() { turtle.hideturtle(); });
   def("clean", function() { turtle.clear(); });
-  def(["clearscreen", "cs"], function() { turtle.clearscreen(); });
+  def(["clearscreen", "cs", "новчертеж", "нч"], function() { turtle.clearscreen(); });
 
   def("wrap", function() { turtle.setturtlemode('wrap'); });
   def("window", function() { turtle.setturtlemode('window'); });
@@ -1647,14 +1647,14 @@ function LogoInterpreter(turtle, stream, savehook)
   //
   // 6.5 Pen and Background Control
   //
-  def(["pendown", "pd"], function() { turtle.pendown(); });
-  def(["penup", "pu"], function() { turtle.penup(); });
+  def(["pendown", "pd", "вдигни"], function() { turtle.pendown(); });
+  def(["penup", "pu", "спусни"], function() { turtle.penup(); });
 
   def(["penpaint", "ppt"], function() { turtle.setpenmode('paint'); });
-  def(["penerase", "pe"], function() { turtle.setpenmode('erase'); });
+  def(["penerase", "pe", "гума"], function() { turtle.setpenmode('erase'); });
   def(["penreverse", "px"], function() { turtle.setpenmode('reverse'); });
 
-  def(["setpencolor", "setpc", "setcolor"], function(color) {
+  def(["setpencolor", "setpc", "setcolor", "новцвятмол"], function(color) {
     function adjust(n) {
       // Clamp into 0...99
       n = Math.min(99, Math.max(0, Math.floor(n)));
@@ -1676,7 +1676,7 @@ function LogoInterpreter(turtle, stream, savehook)
 
   // Not Supported: setpallete
 
-  def(["setpensize", "setwidth", "setpw"], function(a) {
+  def(["setpensize", "setwidth", "setpw", "новширмол"], function(a) {
     if (Type(a) === 'list') {
       turtle.setwidth(aexpr(a[0]));
     } else {
@@ -2295,7 +2295,7 @@ function LogoInterpreter(turtle, stream, savehook)
     }
   });
 
-  def("repeat", function(count, statements) {
+  def(["repeat","повтори"], function(count, statements) {
     count = aexpr(count);
     statements = reparse(lexpr(statements));
     for (var i = 1; i <= count; ++i) {
