@@ -329,7 +329,7 @@ function LogoInterpreter(turtle, stream, savehook)
       }
 
       if (!c) {
-        throw new Error(__("Expected ']'"));
+        throw new Error(__("Очаквам ']'"));
       }
       if (isWS(c)) {
         continue;
@@ -377,7 +377,7 @@ function LogoInterpreter(turtle, stream, savehook)
       }
 
       if (!c) {
-        throw new Error(__("Expected '}'"));
+        throw new Error(__("Очаквам '}'"));
       }
       if (isWS(c)) {
         continue;
@@ -388,7 +388,7 @@ function LogoInterpreter(turtle, stream, savehook)
         if (string.match(/^(\s*@\s*)(.*)$/)) {
           string = RegExp.$2;
           if (!string.match(/^(-?\d+)(.*)$/))
-            throw new Error(__('Expected number after @'));
+            throw new Error(__('Очаквам число след @'));
           origin = RegExp.$1;
           string = RegExp.$2;
         }
@@ -634,9 +634,9 @@ function LogoInterpreter(turtle, stream, savehook)
             result = expression(list);
 
             if (!list.length) {
-              throw new Error(format(__("Expected ')'")));
+              throw new Error(format(__("Очаквам ')'")));
             } else if (!peek(list, [')'])) {
-              throw new Error(format(__("Expected ')', saw {word}"), { word: list.shift() }));
+              throw new Error(format(__("Очаквам ')', видях {word}"), { word: list.shift() }));
             }
             list.shift();
             return result;
@@ -653,7 +653,7 @@ function LogoInterpreter(turtle, stream, savehook)
   self.dispatch = function(name, tokenlist, natural) {
     var procedure = self.routines.get(name);
     if (!procedure) {
-      throw new Error(format(__("Don't know how to {name:U}"), { name: name }));
+      throw new Error(format(__("Не знам как да {name:U}"), { name: name }));
     }
 
     if (procedure.special) {
@@ -693,7 +693,7 @@ function LogoInterpreter(turtle, stream, savehook)
   //----------------------------------------------------------------------
   function aexpr(atom) {
     if (atom === undefined) {
-      throw new Error(__("Expected number"));
+      throw new Error(__("Очаквам число"));
     }
     switch (Type(atom)) {
     case 'number':
@@ -703,14 +703,14 @@ function LogoInterpreter(turtle, stream, savehook)
         return parseFloat(atom);
       break;
     }
-    throw new Error(__("Expected number"));
+    throw new Error(__("Очаквам число"));
   }
 
   //----------------------------------------------------------------------
   // String expression convenience function
   //----------------------------------------------------------------------
   function sexpr(atom) {
-    if (atom === undefined) { throw new Error(__("Expected string")); }
+    if (atom === undefined) { throw new Error(__("Очаквам текст")); }
     if (atom === UNARY_MINUS) { return '-'; }
     switch (Type(atom)) {
     case 'word':
@@ -719,7 +719,7 @@ function LogoInterpreter(turtle, stream, savehook)
       return String(atom);
     }
 
-    throw new Error(__("Expected string"));
+    throw new Error(__("Очаквам текст"));
   }
 
   //----------------------------------------------------------------------
@@ -728,7 +728,7 @@ function LogoInterpreter(turtle, stream, savehook)
   function lexpr(atom) {
     // TODO: If this is an input, output needs to be re-stringified
 
-    if (atom === undefined) { throw new Error(__("Expected list")); }
+    if (atom === undefined) { throw new Error(__("Очаквам списък")); }
     switch (Type(atom)) {
     case 'word':
       return [].slice.call(atom);
@@ -736,7 +736,7 @@ function LogoInterpreter(turtle, stream, savehook)
       return copy(atom);
     }
 
-    throw new Error(__("Expected list"));
+    throw new Error(__("Очаквам списък"));
   }
 
   //----------------------------------------------------------------------
@@ -944,7 +944,7 @@ function LogoInterpreter(turtle, stream, savehook)
   def(["to","за"], function(list) {
     var name = sexpr(list.shift());
     if (!name.match(regexIdentifier)) {
-      throw new Error(__("Expected identifier"));
+      throw new Error(__("Очаквам идентификатор"));
     }
 
     if (self.routines.has(name) && self.routines.get(name).primitive) {
@@ -958,7 +958,7 @@ function LogoInterpreter(turtle, stream, savehook)
     var state_inputs = true, sawEnd = false;
     while (list.length) {
       var atom = list.shift();
-      if (Type(atom) === 'word' && atom.toUpperCase() === 'КРАЙ') {
+      if (Type(atom) === 'word' && (atom.toUpperCase() === 'КРАЙ' || atom.toUpperCase() === 'END')) {
         sawEnd = true;
         break;
       } else if (state_inputs && Type(atom) === 'word' && atom.charAt(0) === ':') {
@@ -969,7 +969,7 @@ function LogoInterpreter(turtle, stream, savehook)
       }
     }
     if (!sawEnd) {
-      throw new Error(__("Expected END"));
+      throw new Error(__("Очаквам КРАЙ"));
     }
 
     // Closure over inputs and block to handle scopes, arguments and outputs
@@ -1761,7 +1761,7 @@ function LogoInterpreter(turtle, stream, savehook)
 
   // 7.2 Variable Definition
 
-  def("make", function(varname, value) {
+  def(["make", "направи"], function(varname, value) {
     setvar(sexpr(varname), value);
   });
 
@@ -2326,14 +2326,14 @@ function LogoInterpreter(turtle, stream, savehook)
     return self.repcount;
   });
 
-  def("if", function(test, statements) {
+  def(["if", "ако"], function(test, statements) {
     test = aexpr(test);
     statements = reparse(lexpr(statements));
 
     if (test) { self.execute(statements); }
   });
 
-  def("ifelse", function(test, statements1, statements2) {
+  def(["ifelse","акоиначе"], function(test, statements1, statements2) {
     test = aexpr(test);
     statements1 = reparse(lexpr(statements1));
     statements2 = reparse(lexpr(statements2));
@@ -2359,7 +2359,7 @@ function LogoInterpreter(turtle, stream, savehook)
     if (!tf) { self.execute(statements); }
   });
 
-  def("stop", function() {
+  def(["stop", "спри"], function() {
     throw new Output();
   });
 

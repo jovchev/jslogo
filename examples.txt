@@ -1,8 +1,8 @@
-to star
-  repeat 5 [ fd 100 rt 144 ]
-end
-clearscreen
-star
+за звезда
+  повтори 5 [ нп 100 нд 144 ]
+край
+новчертеж
+звезда
 
 to square :length
   repeat 4 [ fd :length rt 90 ]
@@ -27,19 +27,19 @@ repeat 144 [
   rt 10
 ]
 
-to tree :size
-   if :size < 5 [forward :size back :size stop]
-   forward :size/3
-   left 30 tree :size*2/3 right 30
-   forward :size/6
-   right 25 tree :size/2 left 25
-   forward :size/3
-   right 25 tree :size/2 left 25
-   forward :size/6
-   back :size
-end
-clearscreen
-tree 150
+за дърво :размер
+   if :размер < 5 [напред :размер назад :размер stop]
+   напред :размер/3
+   нл 30 дърво :размер*2/3 нд 30
+   нп :размер/6
+   нд 25 дърво :размер/2 нл 25
+   нп :размер/3
+   нд 25 дърво :размер/2 нл 25
+   нп :размер/6
+   нз :размер
+край
+нч
+дърво 150
 
 to fern :size :sign
   if :size < 1 [ stop ]
