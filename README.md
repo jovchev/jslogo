@@ -1,7 +1,10 @@
 jslogo - Logo in JavaScript
 ===========================
 
-This is hosted at http://inexorabletash.github.io/jslogo/ for playing with live.
+Този проект е клониран от https://github.com/inexorabletash/jslogo
+
+Целта е да се преведе възможно най-много на български езика Лого.
+This is hosted at http://jovchev.github.io/jslogo/ for playing with live.
 
 [Language Reference](http://htmlpreview.github.com/?https://github.com/inexorabletash/jslogo/blob/master/language.htm) -
 this attempts to implement a subset of [UCBLogo](http://www.cs.berkeley.edu/~bh/v2ch14/manual.html)
@@ -9,13 +12,16 @@ defined in in *Brian Harvey's Computer Science Logo Style*
 
 Use `git clone --recursive` to get [polyfill](https://github.com/inexorabletash/polyfill) for older browsers.
 
-Logo Examples
+Примери
 -------------
-    to star repeat 5 [ fd 100 rt 144 ] end
-    star
-    to square :length repeat 4 [ fd :length rt 90 ] end
-    repeat 36 [ square 50 rt 10 ]
-    to randomcolor setcolor pick [ red orange yellow green blue violet ] end
+	за звезда повтори [ нп 100 нд 144 ] край
+    звезда
+    
+    за квадрат :размер повтори 4 [ нп :размер нд 90 ] край
+    повтори 36 [ квадрат 50 нд 10 ]
+    
+	За превеждане
+	to randomcolor setcolor pick [ red orange yellow green blue violet ] end
     repeat 36 [ randomcolor square random 200 rt 10 ]
     window pu repeat 72 [ setlabelheight repcount fd repcount * 2.5 label "Logo bk repcount * 2.5 rt 10 ]
 
